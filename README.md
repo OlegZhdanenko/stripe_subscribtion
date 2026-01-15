@@ -1,4 +1,0 @@
-PORT = 8000
-STRIPE_SECRET_KEY=sk_test_51Sg1E5K7nimlv5qdezCtHOHCtDaYgyvufxQB30ggnsYq8Z4oGj4f8mPiqizI3m3vB8a8YhQp458q9Y6iNdXX9RLx00T3vpg9OU
-STRIPE_WEBHOOK_SECRET=whsec_95831eb2d983b117e28880a097ea51f5a7beb8cdfec9ababfd22addf4e3b3a39
-MONGO_URI= mongodb+srv://olegzhdan1988_db_user:Lnewrk25noaU9cqR@cluster0.jh5qeme.mongodb.net/?appName=Cluster0
