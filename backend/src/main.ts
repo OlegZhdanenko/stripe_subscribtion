@@ -2,19 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const PORT = process.env.PORT;
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
+  app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true,
+    origin: '*',
   });
-  app.setGlobalPrefix('api', {
-    exclude: ['stripe/webhook'],
-  });
-  await app.listen(PORT ?? 8000);
-  console.log(`Server listen on port ${PORT}`);
+
+  await app.listen(process.env.PORT ?? 8000);
+  console.log(`Server listhen on port ${process.env.PORT}`);
 }
-bootstrap().catch((err) => console.log(err));
+
+bootstrap().catch(console.error);
