@@ -1,3 +1,5 @@
+// src/user/user.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -5,24 +7,34 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  create(email: string) {
-    return this.prisma.user.create({ data: { email } });
-  }
-
-  attachCustomer(userId: string, customerId: string) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { stripeCustomerId: customerId },
+  async findById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
     });
   }
 
-  setPlan(customerId: string, active: boolean) {
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
+  async create(data: { id: string; email: string }) {
+    return this.prisma.user.create({
+      data,
+    });
+  }
+
+  async update(id: string, data: { stripeCustomerId?: string }) {
     return this.prisma.user.update({
-      where: { stripeCustomerId: customerId },
-      data: {
-        isSubscriptionActive: active,
-        plan: active ? 'pro' : 'free',
-      },
+      where: { id },
+      data,
+    });
+  }
+
+  async findByStripeCustomerId(stripeCustomerId: string) {
+    return this.prisma.user.findUnique({
+      where: { stripeCustomerId },
     });
   }
 }

@@ -7,12 +7,14 @@ async function bootstrap() {
     rawBody: true,
   });
 
-  app.setGlobalPrefix('api');
-
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:3000',
+    credentials: true,
   });
-  await app.listen(PORT ?? 3000);
+  app.setGlobalPrefix('api', {
+    exclude: ['stripe/webhook'],
+  });
+  await app.listen(PORT ?? 8000);
   console.log(`Server listen on port ${PORT}`);
 }
 bootstrap().catch((err) => console.log(err));

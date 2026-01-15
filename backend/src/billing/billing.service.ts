@@ -12,10 +12,41 @@ export class BillingService {
   ) {}
 
   async startTrial(userId: string, email: string) {
-    const customer = await this.stripe.createCustomer(email);
+    let user = await this.users.findById(userId);
 
-    await this.users.attachCustomer(userId, customer.id);
+    if (!user) {
+      user = await this.users.create({
+        id: userId,
+        email,
+      });
+    }
 
-    return this.stripe.createSubscription(customer.id);
+    if (!user.stripeCustomerId) {
+      const customer = await this.stripe.createCustomer(email);
+      user = await this.users.update(userId, {
+        stripeCustomerId: customer.id,
+      });
+    }
+
+    const subscription = await this.stripe.createSubscription(
+      user.stripeCustomerId!,
+      process.env.STRIPE_PRICE_ID!,
+    );
+
+    await this.subs.sync(subscription);
+
+    return {
+      success: true,
+      subscriptionId: subscription.id,
+      status: subscription.status,
+      trialEnd: subscription.trial_end,
+    };
+  }
+
+  async createSubscriptionForCustomer(customerId: string) {
+    return this.stripe.createSubscription(
+      customerId,
+      process.env.STRIPE_PRICE_ID!,
+    );
   }
 }

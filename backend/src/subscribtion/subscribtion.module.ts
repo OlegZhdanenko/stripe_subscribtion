@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from 'src/user/user.module';
+
 import { SubscriptionsService } from './subscribtion.service';
+import { PaymentsModule } from 'src/payment/payment.module';
+import { StripeModule } from 'src/stripe/stripe.module';
+import { PrismaModule } from 'src/prisma/payment.module';
+import { SubscriptionsController } from './subscribtion.controller';
 
 @Module({
-  imports: [UsersModule],
+  imports: [PrismaModule, StripeModule, PaymentsModule],
+  controllers: [SubscriptionsController],
   providers: [SubscriptionsService],
   exports: [SubscriptionsService],
 })
